@@ -15,14 +15,14 @@ import os
 import os
 # from distutils.util import strtobool
 # from os.path import join
-from .configs import simple_jwt, rest_framework
-
+from .configs import simple_jwt, rest_framework, optimization
 import dj_database_url
-from configurations import Configuration
 from django.core.exceptions import ImproperlyConfigured
 
+from configurations import Configuration
 
-class Base(Configuration, simple_jwt, rest_framework):
+
+class Base(Configuration, simple_jwt, rest_framework, optimization):
     PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     BASE_DIR = os.path.dirname(PROJECT_DIR)
     
@@ -93,10 +93,6 @@ class Base(Configuration, simple_jwt, rest_framework):
     CORS_ORIGIN_ALLOW_ALL = True
     ALLOWED_HOSTS = ["*"]
 
-
-    # Database
-    # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
-
     DB_URI = os.getenv('DB_URI')
     if DB_URI is None:
         raise ImproperlyConfigured("The DB_URI env variable must not be empty.")
@@ -106,17 +102,6 @@ class Base(Configuration, simple_jwt, rest_framework):
             default=DB_URI,
             conn_max_age=3600
         )
-    }
-
-    # MongoDB
-    MONGO_SETTINGS = {
-        'DB_NAME': os.getenv('MONGO_DB'),
-        'HOST': os.getenv('MONGO_HOST'),
-        'PORT': os.getenv('MONGO_PORT'),
-        'USER': os.getenv('MONGO_USER'),
-        'PASSWORD': os.getenv('MONGO_PASSWORD'),
-        'AUTH_SOURCE': os.getenv('MONGO_AUTH_SOURCE'),
-        'SRV_URL': os.getenv('MONGO_SRV_URL'),
     }
 
     CACHES = {
@@ -210,3 +195,7 @@ class Base(Configuration, simple_jwt, rest_framework):
     # Base URL to use when referring to full URLs within the Wagtail admin backend -
     # e.g. in notification emails. Don't include '/admin' or a trailing slash
     WAGTAILADMIN_BASE_URL = "http://example.com"
+
+    # def __init__(self) -> None:
+    #     print(self.DATABASES, self.MONGO_SETTINGS)
+    #     super(Configuration).__init__()
