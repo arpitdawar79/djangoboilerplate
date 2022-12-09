@@ -2,20 +2,23 @@ from datetime import timedelta
 from django.core.exceptions import ImproperlyConfigured
 import os
 
+
 class simple_jwt:
     if JWT_SIGNING_KEY_PATH := os.getenv('TOKEN_SIGNING_KEY_PATH'):
-          with open(JWT_SIGNING_KEY_PATH, 'rb') as f:
-              JWT_SIGNING_SECRET = f.read()
-              if not JWT_SIGNING_SECRET:
-                  raise ImproperlyConfigured("Signing Key File should not be empty")
+        with open(JWT_SIGNING_KEY_PATH, 'rb') as f:
+            JWT_SIGNING_SECRET = f.read()
+            if not JWT_SIGNING_SECRET:
+                raise ImproperlyConfigured(
+                    "Signing Key File should not be empty")
     else:
         raise ImproperlyConfigured("TOKEN_SIGNING_KEY_PATH is not set")
 
     if JWT_VERIFICATION_KEY_PATH := os.getenv('TOKEN_VERIFICATION_KEY_PATH'):
-          with open(JWT_VERIFICATION_KEY_PATH, 'rb') as f:
-              JWT_VERIFICATION_SECRET = f.read()
-              if not JWT_VERIFICATION_SECRET:
-                  raise ImproperlyConfigured("Verification Key File should not be empty")
+        with open(JWT_VERIFICATION_KEY_PATH, 'rb') as f:
+            JWT_VERIFICATION_SECRET = f.read()
+            if not JWT_VERIFICATION_SECRET:
+                raise ImproperlyConfigured(
+                    "Verification Key File should not be empty")
     else:
         raise ImproperlyConfigured("TOKEN_VERIFICATION_KEY_PATH is not set")
 
@@ -28,4 +31,4 @@ class simple_jwt:
         'ALGORITHM': 'RS256',
         'SIGNING_KEY': JWT_SIGNING_SECRET,
         'VERIFYING_KEY': JWT_VERIFICATION_SECRET,
-      }
+    }

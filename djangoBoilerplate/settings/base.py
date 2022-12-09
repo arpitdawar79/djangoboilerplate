@@ -25,7 +25,11 @@ from configurations import Configuration
 class Base(Configuration, simple_jwt, rest_framework, optimization):
     PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     BASE_DIR = os.path.dirname(PROJECT_DIR)
-    
+
+    CUSTOM_APPS = [
+        "drf_yasg",
+    ]
+
     INSTALLED_APPS = [
         "home",
         "search",
@@ -48,7 +52,7 @@ class Base(Configuration, simple_jwt, rest_framework, optimization):
         "django.contrib.sessions",
         "django.contrib.messages",
         "django.contrib.staticfiles",
-    ]
+    ] + CUSTOM_APPS
 
     MIDDLEWARE = [
         "django.contrib.sessions.middleware.SessionMiddleware",
@@ -95,7 +99,8 @@ class Base(Configuration, simple_jwt, rest_framework, optimization):
 
     DB_URI = os.getenv('DB_URI')
     if DB_URI is None:
-        raise ImproperlyConfigured("The DB_URI env variable must not be empty.")
+        raise ImproperlyConfigured(
+            "The DB_URI env variable must not be empty.")
 
     DATABASES = {
         'default': dj_database_url.config(
@@ -111,14 +116,13 @@ class Base(Configuration, simple_jwt, rest_framework, optimization):
                 'redis://localhost:6379?db=1'
             ],
             'TIMEOUT': 60 * 60 * 2,  # Cache timeout as 2 hours #
-            #'TIMEOUT': 1,  # Cache timeout as 1 Second for Testing #
+            # 'TIMEOUT': 1,  # Cache timeout as 1 Second for Testing #
             'OPTIONS': {
                 "CLIENT_CLASS": "django_redis.client.DefaultClient",
                 "CONNECTION_POOL_KWARGS": {"max_connections": 2000}
             },
         },
     }
-
 
     # Password validation
     # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -138,7 +142,6 @@ class Base(Configuration, simple_jwt, rest_framework, optimization):
         },
     ]
 
-
     # Internationalization
     # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
@@ -154,7 +157,6 @@ class Base(Configuration, simple_jwt, rest_framework, optimization):
     USE_L10N = True
     USE_TZ = True
     LOGIN_REDIRECT_URL = '/'
-
 
     # Static files (CSS, JavaScript, Images)
     # https://docs.djangoproject.com/en/4.1/howto/static-files/
@@ -178,7 +180,6 @@ class Base(Configuration, simple_jwt, rest_framework, optimization):
 
     MEDIA_ROOT = os.path.join(BASE_DIR, "media")
     MEDIA_URL = "/media/"
-
 
     # Wagtail settings
 
